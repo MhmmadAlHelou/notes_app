@@ -11,7 +11,7 @@ class NoteItem extends StatelessWidget {
           color: Colors.yellow, borderRadius: BorderRadius.circular(16)),
       child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
         ListTile(
-          title: Text(
+          title: const Text(
             'Flutter Tips',
             style: TextStyle(color: Colors.black, fontSize: 26),
           ),
@@ -22,7 +22,7 @@ class NoteItem extends StatelessWidget {
                     color: Colors.black.withOpacity(0.5), fontSize: 18)),
           ),
           trailing: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete,
                 color: Colors.black,
                 size: 24,
