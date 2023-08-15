@@ -6,6 +6,8 @@ import '../models/note_model.dart';
 import 'custom_botton.dart';
 import 'custom_text_field.dart';
 
+import 'package:intl/intl.dart';
+
 class AddNoteForm extends StatefulWidget {
   const AddNoteForm({super.key});
 
@@ -52,7 +54,10 @@ class _AddNoteFormState extends State<AddNoteForm> {
                     var noteModel = NoteModel(
                         title: title!,
                         subTitle: subTitle!,
-                        date: DateTime.now().toString(),
+                        date: DateFormat('yyyy-MM-dd')
+                            .format(DateTime.now())
+                            .toString(),
+                        // date: DateTime.now().toString(),
                         color: Colors.blue.value);
                     BlocProvider.of<AddNoteCubit>(context).addNote(noteModel);
                   } else {
