@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notes_app/cubits/add_note_cubit/add_note_cubit.dart';
+import 'package:speech_to_text/speech_recognition_result.dart';
+import 'package:speech_to_text/speech_to_text.dart';
 
 import '../models/note_model.dart';
 import 'colors_list_view.dart';
@@ -21,6 +25,45 @@ class _AddNoteFormState extends State<AddNoteForm> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
   String? title, subTitle;
 
+  ///////////
+  ///
+  ///
+  ///
+
+  final SpeechToText speechToTextInstance = SpeechToText();
+  String recordedAudioString = "";
+  bool isLoading = false;
+
+  void initializedSpeechToText() async {
+    await speechToTextInstance.initialize();
+    setState(() {});
+  }
+
+  void startListeningNow() async {
+    FocusScope.of(context).unfocus();
+    await speechToTextInstance.listen(onResult: onSpeechToTextResult);
+    setState(() {});
+  }
+
+  void stopListeningNow() async {
+    await speechToTextInstance.stop();
+    setState(() {});
+  }
+
+  void onSpeechToTextResult(SpeechRecognitionResult recognitionResult) {
+    recordedAudioString = recognitionResult.recognizedWords;
+    print('Speech Result');
+    print(recordedAudioString);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializedSpeechToText();
+  }
+
+  ///////////////
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -37,14 +80,47 @@ class _AddNoteFormState extends State<AddNoteForm> {
           ),
           const SizedBox(height: 16),
           CustomTextFiel(
-            hint: 'Content',
+            hint: recordedAudioString.isEmpty ? 'Content' : recordedAudioString,
             maxLines: 5,
             onSaved: (p0) {
-              subTitle = p0;
+              subTitle = recordedAudioString.isEmpty ? p0 : recordedAudioString;
             },
           ),
           //   Spacer(),
           const SizedBox(height: 28),
+          ////////////////////////////////
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              speechToTextInstance.isListening
+                  ? FloatingActionButton(
+                      backgroundColor: Colors.grey[850],
+                      child: Center(
+                        child: LoadingAnimationWidget.beat(
+                          color: speechToTextInstance.isListening
+                              ? Colors.deepPurple
+                              : isLoading
+                                  ? Colors.deepPurple[400]!
+                                  : Colors.deepPurple[200]!,
+                          size: 33,
+                        ),
+                      ),
+                      onPressed: () {
+                        stopListeningNow();
+                      },
+                    )
+                  : IconButton(
+                      onPressed: () {
+                        speechToTextInstance.isListening
+                            ? stopListeningNow()
+                            : startListeningNow();
+                      },
+                      icon: const Icon(Icons.mic),
+                    ),
+            ],
+          ),
+          const SizedBox(height: 28),
+          ////////////////////////////////
           const ColorsListView(),
           const SizedBox(height: 28),
           BlocBuilder<AddNoteCubit, AddNoteState>(
