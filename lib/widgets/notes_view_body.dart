@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_app/widgets/custom_app_bar.dart';
+import 'package:notes_app/widgets/search_widget.dart';
 
 import '../cubits/notes_cubit/notes_cubit.dart';
 import 'notes_list_view.dart';
@@ -21,15 +22,18 @@ class _NotesViewBodyState extends State<NotesViewBody> {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       child: Column(
         children: [
           CustomAppBar(
+            onPressed: () {
+              showSearch(context: context, delegate: SearchWidget());
+            },
             title: 'Notes',
             icon: Icons.search,
           ),
-          Expanded(child: NotesListView()),
+          const Expanded(child: NotesListView()),
         ],
       ),
     );

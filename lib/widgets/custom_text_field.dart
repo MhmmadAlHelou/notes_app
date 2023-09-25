@@ -22,8 +22,10 @@ class CustomTextFiel extends StatelessWidget {
       onChanged: onChanged,
       onSaved: onSaved,
       validator: (value) {
-        if (value?.isEmpty ?? true) {
-          return 'Fiele is required';
+        if (maxLines != 5) {
+          if (value?.isEmpty ?? true) {
+            return 'Fiele is required';
+          }
         } else {
           return null;
         }

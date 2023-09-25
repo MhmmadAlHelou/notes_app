@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:notes_app/cubits/add_note_cubit/add_note_cubit.dart';
@@ -89,6 +88,7 @@ class _AddNoteFormState extends State<AddNoteForm> {
           //   Spacer(),
           const SizedBox(height: 28),
           ////////////////////////////////
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
@@ -119,13 +119,15 @@ class _AddNoteFormState extends State<AddNoteForm> {
                     ),
             ],
           ),
-          const SizedBox(height: 28),
+
           ////////////////////////////////
+          const SizedBox(height: 28),
           const ColorsListView(),
           const SizedBox(height: 28),
           BlocBuilder<AddNoteCubit, AddNoteState>(
             builder: (context, state) {
               return CustomButton(
+                title: 'Add',
                 isLoading: state is AddNoteLoading ? true : false,
                 onTap: () {
                   if (formKey.currentState!.validate()) {
